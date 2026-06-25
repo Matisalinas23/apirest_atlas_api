@@ -1,5 +1,10 @@
-import { Project } from "@/generated/prisma/client";
+import { Prisma, Project } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { ConflictError } from "../errors/ConflictError";
+import { CreateProjectDto } from "@/interfaces/createProjectDto.interface";
+import { validateCreateProject } from "../validators/project.validator";
+
+const KnownRequestError = Prisma.PrismaClientKnownRequestError
 
 export const getProjectsService = async () => {
     try {
@@ -11,10 +16,22 @@ export const getProjectsService = async () => {
     }
 }
 
-export const createProjectService = async () => {
+export const createProjectService = async (dtoProject: CreateProjectDto) => {
     try {
-        console.log("En el servicio...")
-    } catch (error) {
-        
+        validateCreateProject(dtoProject);
+
+        const project: Project = await prisma.project.create({
+            data: {
+                name: dtoProject.name,
+            }
+        })
+
+        return project
+    } catch (error: any) {
+        if (error instanceof KnownRequestError && error.code === "P2002") {
+            throw new ConflictError("A project with this name already exists.");
+        }
+
+        throw error
     }
 }
