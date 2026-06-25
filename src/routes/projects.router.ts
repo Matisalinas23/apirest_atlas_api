@@ -1,7 +1,9 @@
 import express from 'express';
-import { createProjectController, getProjectsController } from '@/controllers/projects.controller';
+import { createProjectController, deleteProjectController, getProjectsController } from '@/controllers/projects.controller';
 
 const router = express.Router();
+
+router.delete('/:id', deleteProjectController)
 
 router.get('/', getProjectsController);
 router.post('/', createProjectController);

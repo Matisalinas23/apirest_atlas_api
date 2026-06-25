@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createProjectService, getProjectsService } from "@/services/projects.service";
+import { createProjectService, deleteProjectService, getProjectsService } from "@/services/projects.service";
 
 export const getProjectsController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -17,6 +17,20 @@ export const createProjectController = async (req: Request, res: Response, next:
 
         res.status(201).json({ project });
     } catch (error: any) {
+        next(error);
+    }
+}
+
+export const deleteProjectController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const projectId = parseInt(req.params.id as string)
+        const project = await deleteProjectService(projectId);
+
+        res.status(200).json({
+            message: "Project deleted successfully",
+            project: project
+        })
+    } catch (error) {
         next(error);
     }
 }
