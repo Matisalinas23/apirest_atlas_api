@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Project {
+  id             Int       @id @default(autoincrement())
+  name           String    @unique
+  lastModifyDate DateTime  @default(now()) @updatedAt
+  modules        Module[]
+}
+
+model Module {
+  id          Int      @id @default(autoincrement())
+  projectId   Int
+  moduleId    Int?
+  name        String   @unique
+  endpoints   Endpoint[]
+  project     Project? @relation(fields: [projectId], references: [id])
+
+  // Pater module
+  module Module? @relation("ModuleHierarchy", fields: [moduleId], references: [id])
+  // Children modules
+  modules Module[] @relation("ModuleHierarchy")
+}
+
+model Endpoint {
+  id             Int             @id @default(autoincrement())
+  moduleId       Int
+  name           String
+  description    String
+  notes          String
+  tags           String[]
+  
+  module         Module          @relation(fields: [moduleId], references: [id])
+  pathParameters PathParameter[]
+  queryParameters QueryParameter[]
+  headers        Header[]
+
+  requestBody    Json
+  response       Json
+}
+
+model PathParameter {
+  id          Int      @id @default(autoincrement())
+  endpointId  Int
+  name        String
+  type        String
+  description String
+  required    Boolean  @default(false)
+  endpoint    Endpoint @relation(fields: [endpointId], references: [id])
+}
+
+model QueryParameter {
+  id          Int      @id @default(autoincrement())
+  endpointId  Int
+  name        String
+  type        String
+  description String
+  required    Boolean  @default(false)
+  endpoint    Endpoint @relation(fields: [endpointId], references: [id])
+}
+
+model Header {
+  id          Int      @id @default(autoincrement())
+  endpointId  Int
+  header      String
+  value       String
+  endpoint    Endpoint @relation(fields: [endpointId], references: [id])
+}
