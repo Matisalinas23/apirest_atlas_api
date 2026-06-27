@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { createProjectService, deleteProjectService, getProjectsService, updateProjectService } from "@/services/projects.service";
-import { ProjectDto } from "../interfaces/createProjectDto.interface";
+import { ProjectDto } from "../interfaces/projectDto.interface";
 
 export const getProjectsController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

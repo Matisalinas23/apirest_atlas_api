@@ -1,7 +1,7 @@
 import { Prisma, Project } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ConflictError } from "../errors/ConflictError";
-import { ProjectDto } from "@/interfaces/createProjectDto.interface";
+import { ProjectDto } from "@/src/interfaces/projectDto.interface";
 import { validateProjectDto } from "../validators/project.validator";
 import { NotFoundError } from "../errors/NotFoundError";
 
@@ -19,7 +19,7 @@ export const getProjectsService = async () => {
 
 export const createProjectService = async (dtoProject: ProjectDto) => {
     try {
-       const { name } =  validateProjectDto(dtoProject);
+        const { name } = validateProjectDto(dtoProject);
 
         const project: Project = await prisma.project.create({
             data: { name }

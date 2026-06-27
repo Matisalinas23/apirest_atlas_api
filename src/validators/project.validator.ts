@@ -1,15 +1,15 @@
 import { BadRequestError } from "../errors/BadRequestError"
-import { ProjectDto } from "../interfaces/createProjectDto.interface"
+import { ProjectDto } from "../interfaces/projectDto.interface"
 import { validateAllowedKeys } from "./allowedKeys.validator";
 
-export const validateProjectDto = (dtoProject: ProjectDto) => {
-    if (!dtoProject) {
+export const validateProjectDto = (projectDto: ProjectDto) => {
+    if (!projectDto) {
         throw new BadRequestError("dto de proyecto es requerido")
     }
 
-    validateAllowedKeys(dtoProject, ["name"]);
+    validateAllowedKeys(projectDto, ["name"]);
 
-    const { name } = dtoProject;
+    const { name } = projectDto;
 
     if (!name) {
         throw new BadRequestError("Name is required")
@@ -19,5 +19,5 @@ export const validateProjectDto = (dtoProject: ProjectDto) => {
         throw new BadRequestError("Name must be at least 2 characters long and at most 32 characters long")
     }
 
-    return dtoProject
+    return projectDto
 }
