@@ -1,12 +1,15 @@
 import { BadRequestError } from "../errors/BadRequestError"
 import { ProjectDto } from "../interfaces/createProjectDto.interface"
+import { validateAllowedKeys } from "./allowedKeys.validator";
 
 export const validateProjectDto = (dtoProject: ProjectDto) => {
     if (!dtoProject) {
         throw new BadRequestError("dto de proyecto es requerido")
     }
 
-    const { name } = dtoProject
+    validateAllowedKeys(dtoProject, ["name"]);
+
+    const { name } = dtoProject;
 
     if (!name) {
         throw new BadRequestError("Name is required")
