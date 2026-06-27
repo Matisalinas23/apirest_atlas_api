@@ -38,14 +38,11 @@ export const deleteProjectController = async (req: Request, res: Response, next:
 }
 
 export const updateProjectController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log("En el controlador...")
     try {
         const projectId = parseInt(req.params.id as string);
         const updateProjectDto: ProjectDto = req.body;
-        console.log("Llamando al servicio 'actualizar proyecto'...")
         const project = await updateProjectService(projectId, updateProjectDto);
 
-        console.log("Respuesta en curso...")
         res.status(200).json({ project })
     } catch (error) {
         next(error);
