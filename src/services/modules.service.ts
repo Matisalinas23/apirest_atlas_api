@@ -1,0 +1,33 @@
+import { BadRequestError } from "../errors/BadRequestError"
+import { ModuleDto } from "../interfaces/moduleDto.interface"
+import { prisma } from "../lib/prisma"
+import { validateModuleDto } from "../validators/module.validator"
+
+export const createModuleService = async (moduleDto: ModuleDto) => {
+    try {
+        const { name, projectId } = validateModuleDto(moduleDto)
+
+        const existsProject = await prisma.project.findUnique({
+            where: { id: projectId }
+        })
+
+        if (!existsProject) {
+            throw new BadRequestError("Project not found")
+        }
+
+        const module = await prisma.module.create({
+            data: {
+                name: name,
+                project: {
+                    connect: {
+                        id: projectId
+                    }
+                }
+            }
+        })
+
+        return module
+    } catch (error) {
+        throw error
+    }
+}
