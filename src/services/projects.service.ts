@@ -4,6 +4,7 @@ import { ConflictError } from "../errors/ConflictError";
 import { ProjectDto } from "@/src/interfaces/projectDto.interface";
 import { validateProjectDto } from "../validators/project.validator";
 import { NotFoundError } from "../errors/NotFoundError";
+import { validateId } from "../validators/ids.validator";
 
 const KnownRequestError = Prisma.PrismaClientKnownRequestError
 
@@ -37,10 +38,11 @@ export const createProjectService = async (dtoProject: ProjectDto) => {
 
 export const updateProjectService = async (id: number, updateProjectDto: ProjectDto) => {
     try {
+        const validId = validateId(id);
         const { name } = validateProjectDto(updateProjectDto);
 
         const project: Project = await prisma.project.update({
-            where: { id },
+            where: { id: validId },
             data: { name }
         })
 
@@ -56,8 +58,10 @@ export const updateProjectService = async (id: number, updateProjectDto: Project
 
 export const deleteProjectService = async (id: number) => {
     try {
+        const validId = validateId(id);
+
         const project: Project = await prisma.project.delete({
-            where: { id }
+            where: { id: validId }
         })
 
         return project
@@ -72,8 +76,10 @@ export const deleteProjectService = async (id: number) => {
 
 export const getProjectByIdService = async (id: number) => {
     try {
+        const validId = validateId(id);
+
         const project: Project = await prisma.project.findUniqueOrThrow({
-            where: { id },
+            where: { id: validId },
             include: {
                 modules: {
                     include: {
