@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createProjectService, deleteProjectService, getProjectsService, updateProjectService } from "@/services/projects.service";
+import { createProjectService, deleteProjectService, getProjectByIdService, getProjectsService, updateProjectService } from "@/services/projects.service";
 import { ProjectDto } from "../interfaces/projectDto.interface";
 
 export const getProjectsController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -44,6 +44,17 @@ export const updateProjectController = async (req: Request, res: Response, next:
         const project = await updateProjectService(projectId, updateProjectDto);
 
         res.status(200).json({ project })
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getProjectByIdController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const projectId = parseInt(req.params.id as string);
+        const project = await getProjectByIdService(projectId);
+
+        res.status(200).json({ project });
     } catch (error) {
         next(error);
     }

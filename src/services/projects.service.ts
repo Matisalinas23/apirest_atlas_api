@@ -69,3 +69,33 @@ export const deleteProjectService = async (id: number) => {
         throw error
     }
 }
+
+export const getProjectByIdService = async (id: number) => {
+    try {
+        const project: Project = await prisma.project.findUniqueOrThrow({
+            where: { id },
+            include: {
+                modules: {
+                    include: {
+                        modules: true,
+                        endpoints: {
+                            include: {
+                                queryParameters: true,
+                                pathParameters: true,
+                                headers: true,
+                            }
+                        }
+                    },
+                }
+            }
+        })
+
+        return project
+    } catch (error: any) {
+        if (error instanceof KnownRequestError && error.code === "P2025") {
+            throw new NotFoundError("A project with this id doesn't exists.");
+        }
+
+        throw error
+    }
+}
