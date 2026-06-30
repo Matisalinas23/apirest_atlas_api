@@ -1,3 +1,4 @@
+import { Module } from "@/generated/prisma/client"
 import { BadRequestError } from "../errors/BadRequestError"
 import { ModuleDto } from "../interfaces/moduleDto.interface"
 import { prisma } from "../lib/prisma"
@@ -27,6 +28,16 @@ export const createModuleService = async (moduleDto: ModuleDto) => {
         })
 
         return module
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getModulesService = async () => {
+    try {
+        const modules: Module[] = await prisma.module.findMany()
+
+        return modules
     } catch (error) {
         throw error
     }
