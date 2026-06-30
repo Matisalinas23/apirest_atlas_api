@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createProjectService, deleteProjectService, getProjectByIdService, getProjectsService, updateProjectService } from "@/services/projects.service";
 import { ProjectDto } from "../interfaces/projectDto.interface";
+import { BadRequestError } from "../errors/BadRequestError";
 
 export const getProjectsController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -25,7 +26,12 @@ export const createProjectController = async (req: Request, res: Response, next:
 
 export const deleteProjectController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const projectId = parseInt(req.params.id as string)
+        const projectId = Number(req.params.id);
+
+        if (Number.isNaN(projectId)) {
+            throw new BadRequestError("Invalid project id");
+        }
+
         const project = await deleteProjectService(projectId);
 
         res.status(200).json({
@@ -39,7 +45,12 @@ export const deleteProjectController = async (req: Request, res: Response, next:
 
 export const updateProjectController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const projectId = parseInt(req.params.id as string);
+        const projectId = Number(req.params.id);
+
+        if (Number.isNaN(projectId)) {
+            throw new BadRequestError("Invalid project id");
+        }
+
         const updateProjectDto: ProjectDto = req.body;
         const project = await updateProjectService(projectId, updateProjectDto);
 
@@ -51,7 +62,12 @@ export const updateProjectController = async (req: Request, res: Response, next:
 
 export const getProjectByIdController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const projectId = parseInt(req.params.id as string);
+        const projectId = Number(req.params.id);
+
+        if (Number.isNaN(projectId)) {
+            throw new BadRequestError("Invalid project id");
+        }
+
         const project = await getProjectByIdService(projectId);
 
         res.status(200).json({ project });
