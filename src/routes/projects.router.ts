@@ -4,7 +4,7 @@ import { createProjectController, deleteProjectController, getProjectByIdControl
 const router = express.Router();
 
 router.delete('/:id', deleteProjectController)
-router.put('/:id', updateProjectController);
+router.patch('/:id', updateProjectController);
 router.get('/:id', getProjectByIdController);
 
 router.get('/', getProjectsController);
