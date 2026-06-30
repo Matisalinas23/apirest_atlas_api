@@ -8,7 +8,7 @@ export const getProjectsController = async (req: Request, res: Response, next: N
         const projects = await getProjectsService();
 
         res.status(200).json({ projects });
-    } catch (error: any) {
+    } catch (error) {
         next(error);
     }
 }
@@ -19,7 +19,7 @@ export const createProjectController = async (req: Request, res: Response, next:
         const project = await createProjectService(createProjectDto);
 
         res.status(201).json({ project });
-    } catch (error: any) {
+    } catch (error) {
         next(error);
     }
 }
