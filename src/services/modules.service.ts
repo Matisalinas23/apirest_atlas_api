@@ -31,7 +31,7 @@ export const createModuleService = async (moduleDto: ModuleDto) => {
 
         return module
     } catch (error) {
-        handlePrismaError(error)
+        handlePrismaError(error, "Module")
         throw error
     }
 }
@@ -60,7 +60,7 @@ export const getModuleByIdService = async (id: number) => {
 
         return module
     } catch (error) {
-        handlePrismaError(error)
+        handlePrismaError(error, "Module")
         throw error
     }
 }
@@ -77,7 +77,7 @@ export const updateModuleService = async (id: number, updateModuleDto: UpdateMod
 
         return module
     } catch (error) {
-        handlePrismaError(error)
+        handlePrismaError(error, "Module")
         throw error
     }
 }

@@ -25,7 +25,7 @@ export const createProjectService = async (dtoProject: ProjectDto) => {
 
         return project
     } catch (error: any) {
-        handlePrismaError(error)
+        handlePrismaError(error, "Project")
         throw error
     }
 }
@@ -42,7 +42,7 @@ export const updateProjectService = async (id: number, updateProjectDto: Project
 
         return project
     } catch (error: any) {
-        handlePrismaError(error)
+        handlePrismaError(error, "Project")
         throw error
     }
 }
@@ -57,7 +57,7 @@ export const deleteProjectService = async (id: number) => {
 
         return project
     } catch (error: any) {
-        handlePrismaError(error)
+        handlePrismaError(error, "Project")
         throw error
     }
 }
@@ -86,7 +86,7 @@ export const getProjectByIdService = async (id: number) => {
 
         return project
     } catch (error: any) {
-        handlePrismaError(error)
+        handlePrismaError(error, "Project")
         throw error
     }
 }
