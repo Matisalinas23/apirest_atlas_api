@@ -1,12 +1,9 @@
-import { Prisma, Project } from "@/generated/prisma/client";
+import { Project } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ConflictError } from "../errors/ConflictError";
 import { ProjectDto } from "@/src/interfaces/projectDto.interface";
 import { validateProjectDto } from "../validators/project.validator";
-import { NotFoundError } from "../errors/NotFoundError";
 import { validateId } from "../validators/ids.validator";
-
-const KnownRequestError = Prisma.PrismaClientKnownRequestError
+import { handlePrismaError } from "../helpers/prisma.helper";
 
 export const getProjectsService = async () => {
     try {
@@ -28,10 +25,7 @@ export const createProjectService = async (dtoProject: ProjectDto) => {
 
         return project
     } catch (error: any) {
-        if (error instanceof KnownRequestError && error.code === "P2002") {
-            throw new ConflictError("A project with this name already exists.");
-        }
-
+        handlePrismaError(error)
         throw error
     }
 }
@@ -48,10 +42,7 @@ export const updateProjectService = async (id: number, updateProjectDto: Project
 
         return project
     } catch (error: any) {
-        if (error instanceof KnownRequestError && error.code === "P2025") {
-            throw new NotFoundError("A project with this id doesn't exists.");
-        }
-
+        handlePrismaError(error)
         throw error
     }
 }
@@ -66,10 +57,7 @@ export const deleteProjectService = async (id: number) => {
 
         return project
     } catch (error: any) {
-        if (error instanceof KnownRequestError && error.code === "P2025") {
-            throw new NotFoundError("A project with this id doesn't exists.");
-        }
-
+        handlePrismaError(error)
         throw error
     }
 }
@@ -98,10 +86,7 @@ export const getProjectByIdService = async (id: number) => {
 
         return project
     } catch (error: any) {
-        if (error instanceof KnownRequestError && error.code === "P2025") {
-            throw new NotFoundError("A project with this id doesn't exists.");
-        }
-
+        handlePrismaError(error)
         throw error
     }
 }
