@@ -1,6 +1,6 @@
 import { BadRequestError } from "../errors/BadRequestError";
-import { ModuleDto } from "../interfaces/moduleDto.interface";
-import { validateAllowedKeys } from "./allowedKeys.validator";
+import { ModuleDto, UpdateModuleDto } from "../interfaces/moduleDto.interface";
+import { validateAllowedKeys } from "./allowedKeys.validator"; 
 
 export const validateModuleDto = (moduleDto: ModuleDto) => {
     if (!moduleDto) {
@@ -28,4 +28,24 @@ export const validateModuleDto = (moduleDto: ModuleDto) => {
     }
 
     return moduleDto
+}
+
+export const validateUpdateModuleDto = (updateModuleDto: UpdateModuleDto) => {
+    if (!updateModuleDto) {
+        throw new BadRequestError("Module DTO is required")
+    }
+
+    validateAllowedKeys(updateModuleDto, ["name"])
+
+    const { name } = updateModuleDto;
+
+    if (!name) {
+        throw new BadRequestError("Name is required")
+    }
+
+    if (name.length < 2 || name.length > 32) {
+        throw new BadRequestError("Name must be at least 2 characters long and at most 32 characters long")
+    }
+
+    return updateModuleDto
 }
