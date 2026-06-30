@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
-import { createModuleService, getModuleByIdService, getModulesService } from "../services/modules.service"
-import { ModuleDto } from "../interfaces/moduleDto.interface"
+import { createModuleService, getModuleByIdService, getModulesService, updateModuleService } from "../services/modules.service"
+import { ModuleDto, UpdateModuleDto } from "../interfaces/moduleDto.interface"
 import { BadRequestError } from "../errors/BadRequestError";
 
 export const createModuleController = async (req: Request, res: Response, next: NextFunction) => {
@@ -33,6 +33,23 @@ export const getModuleByIdController = async (req: Request, res: Response, next:
         }
 
         const module = await getModuleByIdService(moduleId);
+
+        res.status(200).json({ module })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updateModuleController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const moduleId = Number(req.params.id);
+        const updateModuleDto: UpdateModuleDto = req.body;
+
+        if (Number.isNaN(moduleId)) {
+            throw new BadRequestError("Invalid module id");
+        }
+
+        const module = await updateModuleService(moduleId, updateModuleDto);
 
         res.status(200).json({ module })
     } catch (error) {

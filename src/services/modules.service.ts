@@ -1,12 +1,10 @@
-import { Module, Prisma } from "@/generated/prisma/client"
+import { Module } from "@/generated/prisma/client"
 import { BadRequestError } from "../errors/BadRequestError"
-import { ModuleDto } from "../interfaces/moduleDto.interface"
+import { ModuleDto, UpdateModuleDto } from "../interfaces/moduleDto.interface"
 import { prisma } from "../lib/prisma"
-import { validateModuleDto } from "../validators/module.validator"
+import { validateModuleDto, validateUpdateModuleDto } from "../validators/module.validator"
 import { validateId } from "../validators/ids.validator"
-import { NotFoundError } from "../errors/NotFoundError"
-
-const KnownRequestError = Prisma.PrismaClientKnownRequestError
+import { handlePrismaError } from "../helpers/prisma.helper"
 
 export const createModuleService = async (moduleDto: ModuleDto) => {
     try {
@@ -33,6 +31,7 @@ export const createModuleService = async (moduleDto: ModuleDto) => {
 
         return module
     } catch (error) {
+        handlePrismaError(error)
         throw error
     }
 }
@@ -60,11 +59,25 @@ export const getModuleByIdService = async (id: number) => {
         })
 
         return module
-    } catch (error: any) {
-        if (error instanceof KnownRequestError && error.code === 'P2025') {
-            throw new NotFoundError("A module with this id doesn't exist")
-        }
+    } catch (error) {
+        handlePrismaError(error)
+        throw error
+    }
+}
 
+export const updateModuleService = async (id: number, updateModuleDto: UpdateModuleDto) => {
+    try {
+        const validId = validateId(id);
+        const { name } = validateUpdateModuleDto(updateModuleDto);
+
+        const module = await prisma.module.update({
+            where: { id: validId },
+            data: { name }
+        })
+
+        return module
+    } catch (error) {
+        handlePrismaError(error)
         throw error
     }
 }
