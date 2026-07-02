@@ -4,6 +4,20 @@ import { ProjectDto } from "@/src/interfaces/projectDto.interface";
 import { validateProjectDto } from "../validators/project.validator";
 import { validateId } from "../validators/ids.validator";
 import { handlePrismaError } from "../helpers/prisma.helper";
+import { createProjectRepository, deleteProjectRepository, getProjectByIdRepository, updateProjectRepository } from "../repositories/projects.repository";
+
+export const createProjectService = async (dtoProject: ProjectDto) => {
+    try {
+        const validProjectDto = validateProjectDto(dtoProject);
+
+        const project: Project = await createProjectRepository(validProjectDto)
+
+        return project
+    } catch (error: any) {
+        handlePrismaError(error, "Project")
+        throw error
+    }
+}
 
 export const getProjectsService = async () => {
     try {
@@ -15,13 +29,11 @@ export const getProjectsService = async () => {
     }
 }
 
-export const createProjectService = async (dtoProject: ProjectDto) => {
+export const getProjectByIdService = async (id: number) => {
     try {
-        const { name } = validateProjectDto(dtoProject);
+        const validId = validateId(id);
 
-        const project: Project = await prisma.project.create({
-            data: { name }
-        })
+        const project: Project = await getProjectByIdRepository(validId)
 
         return project
     } catch (error: any) {
@@ -33,12 +45,9 @@ export const createProjectService = async (dtoProject: ProjectDto) => {
 export const updateProjectService = async (id: number, updateProjectDto: ProjectDto) => {
     try {
         const validId = validateId(id);
-        const { name } = validateProjectDto(updateProjectDto);
+        const validProjectDto = validateProjectDto(updateProjectDto);
 
-        const project: Project = await prisma.project.update({
-            where: { id: validId },
-            data: { name }
-        })
+        const project: Project = await updateProjectRepository(validId, validProjectDto)
 
         return project
     } catch (error: any) {
@@ -51,38 +60,7 @@ export const deleteProjectService = async (id: number) => {
     try {
         const validId = validateId(id);
 
-        const project: Project = await prisma.project.delete({
-            where: { id: validId }
-        })
-
-        return project
-    } catch (error: any) {
-        handlePrismaError(error, "Project")
-        throw error
-    }
-}
-
-export const getProjectByIdService = async (id: number) => {
-    try {
-        const validId = validateId(id);
-
-        const project: Project = await prisma.project.findUniqueOrThrow({
-            where: { id: validId },
-            include: {
-                modules: {
-                    include: {
-                        modules: true,
-                        endpoints: {
-                            include: {
-                                queryParameters: true,
-                                pathParameters: true,
-                                headers: true,
-                            }
-                        }
-                    },
-                }
-            }
-        })
+        const project: Project = await deleteProjectRepository(validId)
 
         return project
     } catch (error: any) {
