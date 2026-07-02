@@ -1,33 +1,26 @@
 import { Module } from "@/generated/prisma/client"
 import { BadRequestError } from "../errors/BadRequestError"
-import { ModuleDto, UpdateModuleDto } from "../interfaces/module.interface"
+import { ModuleCompleteResponse, ModuleDto, ModuleResponse, UpdateModuleDto } from "../interfaces/module.interface"
 import { prisma } from "../lib/prisma"
 import { validateModuleDto, validateUpdateModuleDto } from "../validators/module.validator"
 import { validateId } from "../validators/ids.validator"
 import { handlePrismaError } from "../helpers/prisma.helper"
+import { ProjectResponse } from "../interfaces/project.interface"
+import { createModuleRepository, getModulesRepository } from "../repositories/modules.repository"
 
 export const createModuleService = async (moduleDto: ModuleDto) => {
     try {
-        const { name, projectId } = validateModuleDto(moduleDto)
+        const validModuleDto: ModuleDto = validateModuleDto(moduleDto)
 
-        const existsProject = await prisma.project.findUnique({
-            where: { id: projectId }
+        const existsProject: ProjectResponse | null = await prisma.project.findUnique({
+            where: { id: validModuleDto.projectId }
         })
 
         if (!existsProject) {
             throw new BadRequestError("Project not found")
         }
 
-        const module = await prisma.module.create({
-            data: {
-                name: name,
-                project: {
-                    connect: {
-                        id: projectId
-                    }
-                }
-            }
-        })
+        const module: ModuleResponse = await createModuleRepository(moduleDto)
 
         return module
     } catch (error) {
@@ -38,7 +31,7 @@ export const createModuleService = async (moduleDto: ModuleDto) => {
 
 export const getModulesService = async () => {
     try {
-        const modules: Module[] = await prisma.module.findMany()
+        const modules: ModuleResponse[] = await getModulesRepository()
 
         return modules
     } catch (error) {
@@ -48,9 +41,9 @@ export const getModulesService = async () => {
 
 export const getModuleByIdService = async (id: number) => {
     try {
-        const validId = validateId(id);
+        const validId: number = validateId(id);
 
-        const module = await prisma.module.findUniqueOrThrow({
+        const module: ModuleCompleteResponse = await prisma.module.findUniqueOrThrow({
             where: { id: validId },
             include: {
                 endpoints: true,
@@ -67,12 +60,14 @@ export const getModuleByIdService = async (id: number) => {
 
 export const updateModuleService = async (id: number, updateModuleDto: UpdateModuleDto) => {
     try {
-        const validId = validateId(id);
-        const { name } = validateUpdateModuleDto(updateModuleDto);
+        const validId: number = validateId(id);
+        const validModuleDto: UpdateModuleDto = validateUpdateModuleDto(updateModuleDto);
 
-        const module = await prisma.module.update({
+        const module: ModuleResponse = await prisma.module.update({
             where: { id: validId },
-            data: { name }
+            data: {
+                name: validModuleDto.name
+            }
         })
 
         return module

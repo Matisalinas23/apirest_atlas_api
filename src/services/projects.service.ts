@@ -1,16 +1,25 @@
-import { Project } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ProjectDto } from "@/src/interfaces/project.interface";
 import { validateProjectDto } from "../validators/project.validator";
 import { validateId } from "../validators/ids.validator";
 import { handlePrismaError } from "../helpers/prisma.helper";
-import { createProjectRepository, deleteProjectRepository, getProjectByIdRepository, updateProjectRepository } from "../repositories/projects.repository";
+
+import {
+    createProjectRepository,
+    deleteProjectRepository,
+    getProjectByIdRepository,
+    updateProjectRepository
+} from "@/src/repositories/projects.repository";
+import {
+    ProjectCompleteResponse,
+    ProjectDto,
+    ProjectResponse
+} from "@/src/interfaces/project.interface";
 
 export const createProjectService = async (dtoProject: ProjectDto) => {
     try {
-        const validProjectDto = validateProjectDto(dtoProject);
+        const validProjectDto: ProjectDto = validateProjectDto(dtoProject);
 
-        const project: Project = await createProjectRepository(validProjectDto)
+        const project: ProjectResponse = await createProjectRepository(validProjectDto)
 
         return project
     } catch (error: any) {
@@ -21,7 +30,7 @@ export const createProjectService = async (dtoProject: ProjectDto) => {
 
 export const getProjectsService = async () => {
     try {
-        const projects: Project[] = await prisma.project.findMany()
+        const projects: ProjectResponse[] = await prisma.project.findMany()
 
         return projects
     } catch (error) {
@@ -31,9 +40,9 @@ export const getProjectsService = async () => {
 
 export const getProjectByIdService = async (id: number) => {
     try {
-        const validId = validateId(id);
+        const validId: number = validateId(id);
 
-        const project: Project = await getProjectByIdRepository(validId)
+        const project: ProjectCompleteResponse = await getProjectByIdRepository(validId)
 
         return project
     } catch (error: any) {
@@ -44,10 +53,10 @@ export const getProjectByIdService = async (id: number) => {
 
 export const updateProjectService = async (id: number, updateProjectDto: ProjectDto) => {
     try {
-        const validId = validateId(id);
-        const validProjectDto = validateProjectDto(updateProjectDto);
+        const validId: number = validateId(id);
+        const validProjectDto: ProjectDto = validateProjectDto(updateProjectDto);
 
-        const project: Project = await updateProjectRepository(validId, validProjectDto)
+        const project: ProjectResponse = await updateProjectRepository(validId, validProjectDto)
 
         return project
     } catch (error: any) {
@@ -58,9 +67,9 @@ export const updateProjectService = async (id: number, updateProjectDto: Project
 
 export const deleteProjectService = async (id: number) => {
     try {
-        const validId = validateId(id);
+        const validId: number = validateId(id);
 
-        const project: Project = await deleteProjectRepository(validId)
+        const project: ProjectResponse = await deleteProjectRepository(validId)
 
         return project
     } catch (error: any) {

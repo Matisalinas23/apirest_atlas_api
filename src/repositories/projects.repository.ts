@@ -24,13 +24,7 @@ export const getProjectByIdRepository = async (id: number): Promise<ProjectCompl
             modules: {
                 include: {
                     modules: true,
-                    endpoints: {
-                        include: {
-                            queryParameters: true,
-                            pathParameters: true,
-                            headers: true,
-                        }
-                    }
+                    endpoints: true
                 },
             }
         }

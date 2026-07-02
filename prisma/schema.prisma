@@ -28,6 +28,17 @@ model Module {
   modules Module[] @relation("ModuleHierarchy")
 }
 
+enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+  PATCH
+  OPTIONS
+  HEAD
+  TRACE
+}
+
 model Endpoint {
   id             Int             @id @default(autoincrement())
   moduleId       Int
@@ -35,6 +46,8 @@ model Endpoint {
   description    String
   notes          String
   tags           String[]
+  method         HttpMethod
+  path           String
   
   module         Module          @relation(fields: [moduleId], references: [id])
   pathParameters PathParameter[]
@@ -42,7 +55,16 @@ model Endpoint {
   headers        Header[]
 
   requestBody    Json
-  response       Json
+  response       Response?
+}
+
+model Response {
+  id          Int      @id @default(autoincrement())
+  statusCode  Int
+  body        Json
+  
+  endpointId  Int      @unique
+  endpoint    Endpoint @relation(fields: [endpointId], references: [id])
 }
 
 model PathParameter {
