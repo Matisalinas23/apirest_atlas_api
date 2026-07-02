@@ -1,4 +1,4 @@
-import { ModuleCompleteResponse, ModuleDto, ModuleResponse } from "../interfaces/module.interface"
+import { ModuleCompleteResponse, ModuleDto, ModuleResponse, UpdateModuleDto } from "../interfaces/module.interface"
 import { prisma } from "../lib/prisma"
 
 export const createModuleRepository = async (moduleDto: ModuleDto): Promise<ModuleResponse> => {
@@ -29,6 +29,15 @@ export const getModuleByIdRepository = async (id: number): Promise<ModuleComplet
             endpoints: true,
             modules: true
         }
+    })
+
+    return module
+}
+
+export const updateModuleRepository = async (id: number, updateModuleDto: UpdateModuleDto): Promise<ModuleResponse> => {
+    const module: ModuleResponse = await prisma.module.update({
+        where: { id },
+        data: { name: updateModuleDto.name }
     })
 
     return module

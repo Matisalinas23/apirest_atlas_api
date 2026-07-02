@@ -6,7 +6,7 @@ import { validateModuleDto, validateUpdateModuleDto } from "../validators/module
 import { validateId } from "../validators/ids.validator"
 import { handlePrismaError } from "../helpers/prisma.helper"
 import { ProjectResponse } from "../interfaces/project.interface"
-import { createModuleRepository, getModulesRepository } from "../repositories/modules.repository"
+import { createModuleRepository, getModuleByIdRepository, getModulesRepository, updateModuleRepository } from "../repositories/modules.repository"
 
 export const createModuleService = async (moduleDto: ModuleDto) => {
     try {
@@ -43,13 +43,7 @@ export const getModuleByIdService = async (id: number) => {
     try {
         const validId: number = validateId(id);
 
-        const module: ModuleCompleteResponse = await prisma.module.findUniqueOrThrow({
-            where: { id: validId },
-            include: {
-                endpoints: true,
-                modules: true
-            }
-        })
+        const module: ModuleCompleteResponse = await getModuleByIdRepository(validId)
 
         return module
     } catch (error) {
@@ -63,12 +57,7 @@ export const updateModuleService = async (id: number, updateModuleDto: UpdateMod
         const validId: number = validateId(id);
         const validModuleDto: UpdateModuleDto = validateUpdateModuleDto(updateModuleDto);
 
-        const module: ModuleResponse = await prisma.module.update({
-            where: { id: validId },
-            data: {
-                name: validModuleDto.name
-            }
-        })
+        const module: ModuleResponse = await updateModuleRepository(validId, validModuleDto)
 
         return module
     } catch (error) {
