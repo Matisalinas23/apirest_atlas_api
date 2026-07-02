@@ -6,7 +6,7 @@ import { validateModuleDto, validateUpdateModuleDto } from "../validators/module
 import { validateId } from "../validators/ids.validator"
 import { handlePrismaError } from "../helpers/prisma.helper"
 import { ProjectResponse } from "../interfaces/project.interface"
-import { createModuleRepository, getModuleByIdRepository, getModulesRepository, updateModuleRepository } from "../repositories/modules.repository"
+import { createModuleRepository, deleteModuleRepository, getModuleByIdRepository, getModulesRepository, updateModuleRepository } from "../repositories/modules.repository"
 
 export const createModuleService = async (moduleDto: ModuleDto) => {
     try {
@@ -58,6 +58,19 @@ export const updateModuleService = async (id: number, updateModuleDto: UpdateMod
         const validModuleDto: UpdateModuleDto = validateUpdateModuleDto(updateModuleDto);
 
         const module: ModuleResponse = await updateModuleRepository(validId, validModuleDto)
+
+        return module
+    } catch (error) {
+        handlePrismaError(error, "Module")
+        throw error
+    }
+}
+
+export const deleteModuleService = async (id: number) => {
+    try {
+        const validId: number = validateId(id);
+
+        const module: ModuleResponse = await deleteModuleRepository(validId)
 
         return module
     } catch (error) {

@@ -42,3 +42,11 @@ export const updateModuleRepository = async (id: number, updateModuleDto: Update
 
     return module
 }
+
+export const deleteModuleRepository = async (id: number): Promise<ModuleResponse> => {
+    const module: ModuleResponse = await prisma.module.delete({
+        where: { id }
+    })
+
+    return module
+}

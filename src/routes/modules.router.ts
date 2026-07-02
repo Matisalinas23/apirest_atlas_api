@@ -1,10 +1,11 @@
 import express from 'express'
-import { createModuleController, getModuleByIdController, getModulesController, updateModuleController } from '../controllers/modules.controller';
+import { createModuleController, deleteModuleController, getModuleByIdController, getModulesController, updateModuleController } from '../controllers/modules.controller';
 
 const router = express.Router();
 
 router.get('/:id', getModuleByIdController);
 router.patch('/:id', updateModuleController);
+router.delete('/:id', deleteModuleController);
 
 router.post("/", createModuleController);
 router.get("/", getModulesController);

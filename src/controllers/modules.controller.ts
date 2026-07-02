@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { createModuleService, getModuleByIdService, getModulesService, updateModuleService } from "../services/modules.service"
+import { createModuleService, deleteModuleService, getModuleByIdService, getModulesService, updateModuleService } from "../services/modules.service"
 import { ModuleDto, UpdateModuleDto } from "../interfaces/module.interface"
 import { BadRequestError } from "../errors/BadRequestError";
 
@@ -52,6 +52,25 @@ export const updateModuleController = async (req: Request, res: Response, next: 
         const module = await updateModuleService(moduleId, updateModuleDto);
 
         res.status(200).json({ module })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteModuleController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const moduleId = Number(req.params.id);
+
+        if (Number.isNaN(moduleId)) {
+            throw new BadRequestError("Invalid module id");
+        }
+
+        const module = await deleteModuleService(moduleId);
+
+        res.status(200).json({
+            message: "Module deleted successfully",
+            module: module
+        })
     } catch (error) {
         next(error)
     }
