@@ -9,7 +9,7 @@ export interface EndpointResponse {
     notes: string
     tags: string[]
     method: string
-    url: string
+    path: string
 
     moduleId: number
 }
