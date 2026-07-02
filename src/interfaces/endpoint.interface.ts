@@ -1,4 +1,3 @@
-import { StringifyOptions } from "node:querystring"
 import { HeaderResponse } from "./header.interface"
 import { ParameterResponse } from "./parameter.interface"
 import { ResponseResponse } from "./response.interace"
