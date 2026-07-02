@@ -1,6 +1,6 @@
 import { Module } from "@/generated/prisma/client"
 import { BadRequestError } from "../errors/BadRequestError"
-import { ModuleDto, UpdateModuleDto } from "../interfaces/moduleDto.interface"
+import { ModuleDto, UpdateModuleDto } from "../interfaces/module.interface"
 import { prisma } from "../lib/prisma"
 import { validateModuleDto, validateUpdateModuleDto } from "../validators/module.validator"
 import { validateId } from "../validators/ids.validator"

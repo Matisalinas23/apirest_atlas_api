@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { createModuleService, getModuleByIdService, getModulesService, updateModuleService } from "../services/modules.service"
-import { ModuleDto, UpdateModuleDto } from "../interfaces/moduleDto.interface"
+import { ModuleDto, UpdateModuleDto } from "../interfaces/module.interface"
 import { BadRequestError } from "../errors/BadRequestError";
 
 export const createModuleController = async (req: Request, res: Response, next: NextFunction) => {

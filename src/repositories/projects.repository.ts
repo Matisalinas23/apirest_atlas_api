@@ -1,15 +1,14 @@
-import { Project } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ProjectDto } from "../interfaces/projectDto.interface";
+import { ProjectCompleteResponse, ProjectDto, ProjectResponse } from "../interfaces/project.interface";
 
-export const getProjectsRepository = async (): Promise<Project[]> => {
-    const projects: Project[] = await prisma.project.findMany()
+export const getProjectsRepository = async (): Promise<ProjectResponse[]> => {
+    const projects: ProjectResponse[] = await prisma.project.findMany()
 
     return projects
 }
 
-export const createProjectRepository = async (projectDto: ProjectDto) => {
-    const project: Project = await prisma.project.create({
+export const createProjectRepository = async (projectDto: ProjectDto): Promise<ProjectResponse> => {
+    const project: ProjectResponse = await prisma.project.create({
         data: {
             name: projectDto.name
         }
@@ -18,8 +17,8 @@ export const createProjectRepository = async (projectDto: ProjectDto) => {
     return project
 }
 
-export const getProjectByIdRepository = async (id: number) => {
-    const project: Project = await prisma.project.findUniqueOrThrow({
+export const getProjectByIdRepository = async (id: number): Promise<ProjectCompleteResponse> => {
+    const project: ProjectCompleteResponse = await prisma.project.findUniqueOrThrow({
         where: { id },
         include: {
             modules: {
@@ -40,8 +39,8 @@ export const getProjectByIdRepository = async (id: number) => {
     return project
 }
 
-export const updateProjectRepository = async (id: number, projectDto: ProjectDto) => {
-    const project: Project = await prisma.project.update({
+export const updateProjectRepository = async (id: number, projectDto: ProjectDto): Promise<ProjectResponse> => {
+    const project: ProjectResponse = await prisma.project.update({
         where: { id },
         data: {
             name: projectDto.name
@@ -51,8 +50,8 @@ export const updateProjectRepository = async (id: number, projectDto: ProjectDto
     return project
 }
 
-export const deleteProjectRepository = async (id: number) => {
-    const project: Project = await prisma.project.delete({
+export const deleteProjectRepository = async (id: number): Promise<ProjectResponse> => {
+    const project: ProjectResponse = await prisma.project.delete({
         where: { id: id }
     })
 

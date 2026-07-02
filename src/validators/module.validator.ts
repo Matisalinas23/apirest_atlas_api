@@ -1,6 +1,6 @@
 import { BadRequestError } from "../errors/BadRequestError";
-import { ModuleDto, UpdateModuleDto } from "../interfaces/moduleDto.interface";
-import { validateAllowedKeys } from "./allowedKeys.validator"; 
+import { ModuleDto, UpdateModuleDto } from "../interfaces/module.interface";
+import { validateAllowedKeys } from "./allowedKeys.validator";
 
 export const validateModuleDto = (moduleDto: ModuleDto) => {
     if (!moduleDto) {
@@ -9,7 +9,7 @@ export const validateModuleDto = (moduleDto: ModuleDto) => {
 
     validateAllowedKeys(moduleDto, ["name", "projectId"])
 
-    const {name, projectId} = moduleDto;
+    const { name, projectId } = moduleDto;
 
     if (!name) {
         throw new BadRequestError("Name is required")

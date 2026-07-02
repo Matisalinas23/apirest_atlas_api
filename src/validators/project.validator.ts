@@ -1,5 +1,5 @@
 import { BadRequestError } from "../errors/BadRequestError"
-import { ProjectDto } from "../interfaces/projectDto.interface"
+import { ProjectDto } from "../interfaces/project.interface"
 import { validateAllowedKeys } from "./allowedKeys.validator";
 
 export const validateProjectDto = (projectDto: ProjectDto) => {

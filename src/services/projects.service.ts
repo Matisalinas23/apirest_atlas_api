@@ -1,6 +1,6 @@
 import { Project } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { ProjectDto } from "@/src/interfaces/projectDto.interface";
+import { ProjectDto } from "@/src/interfaces/project.interface";
 import { validateProjectDto } from "../validators/project.validator";
 import { validateId } from "../validators/ids.validator";
 import { handlePrismaError } from "../helpers/prisma.helper";

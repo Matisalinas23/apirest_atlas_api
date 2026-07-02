@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { createProjectService, deleteProjectService, getProjectByIdService, getProjectsService, updateProjectService } from "@/services/projects.service";
-import { ProjectDto } from "../interfaces/projectDto.interface";
+import { ProjectDto } from "../interfaces/project.interface";
 import { BadRequestError } from "../errors/BadRequestError";
 
 export const createProjectController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
