@@ -36,7 +36,6 @@ enum HttpMethod {
   PATCH
   OPTIONS
   HEAD
-  TRACE
 }
 
 model Endpoint {
