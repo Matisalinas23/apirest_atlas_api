@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import projectsRouter from './routes/projects.router'
-import modulesRouter from './routes/modules.router'
+import projectsRouter from './routes/projects.router';
+import modulesRouter from './routes/modules.router';
+import endpointsRouter from './routes/endpoints.router';
 import { errorHandler } from './middlewares/errorHandler';
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors({
 
 app.use("/projects", projectsRouter);
 app.use("/modules", modulesRouter);
+app.use("/endpoints", endpointsRouter);
 
 app.use(errorHandler);
 
