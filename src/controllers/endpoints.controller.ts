@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { EndpointDto, EndpointResponse } from "../interfaces/endpoint.interface";
-import { createEndpointService } from "../services/endpoints.service";
+import { EndpointCompleteResponse, EndpointDto, EndpointResponse } from "../interfaces/endpoint.interface";
+import { createEndpointService, getEndpointByIdService, getEndpointsService } from "../services/endpoints.service";
 
 export const createEndpointController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -10,5 +10,24 @@ export const createEndpointController = async (req: Request, res: Response, next
         res.status(201).json({ endpoint })
     } catch (error) {
         next(error);
+    }
+}
+
+export const getEndpointsController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const endpoints: EndpointResponse[] = await getEndpointsService();
+
+        res.status(200).json({ endpoints });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getEndpointByIdController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const endpointId: number = Number(req.params.id);
+        const endpoint: EndpointCompleteResponse = await getEndpointByIdService(endpointId)
+    } catch (error) {
+        
     }
 }

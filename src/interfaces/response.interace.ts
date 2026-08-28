@@ -1,7 +1,9 @@
+import { Prisma } from "@/generated/prisma/client"
+
 export interface ResponseResponse {
     id: number
     statusCode: number
-    body: string
+    body: Prisma.JsonValue
 
     endpointId: number
 }
