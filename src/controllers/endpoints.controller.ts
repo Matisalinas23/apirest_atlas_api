@@ -26,8 +26,10 @@ export const getEndpointsController = async (req: Request, res: Response, next: 
 export const getEndpointByIdController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const endpointId: number = Number(req.params.id);
-        const endpoint: EndpointCompleteResponse = await getEndpointByIdService(endpointId)
+        const endpoint: EndpointCompleteResponse = await getEndpointByIdService(endpointId);
+
+        res.status(200).json({ endpoint });
     } catch (error) {
-        
+        next(error);
     }
 }

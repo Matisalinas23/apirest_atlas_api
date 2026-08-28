@@ -29,7 +29,7 @@ export const getEndpointsService = async (): Promise<EndpointResponse[]> => {
 
 export const getEndpointByIdService = async (id: number): Promise<EndpointCompleteResponse> => {
     try {
-        validateId(id)
+        validateId(id);
         const endpoint: EndpointCompleteResponse = await getEndpointByIdRepository(id);
 
         return endpoint;
