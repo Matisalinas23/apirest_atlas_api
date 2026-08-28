@@ -5,16 +5,19 @@ import { ResponseResponse } from "./response.interace"
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD"
 
-export interface EndpointDto {
+export interface UpdateEndpointDto {
     name: string
     description: string
     notes: string
     path: string
     requestBody: string
-    moduleId: number
     tags: string[]
 
     method: HttpMethod
+}
+
+export interface CreateEndpointDto extends UpdateEndpointDto{
+    moduleId: number
 }
 
 export interface EndpointResponse {

@@ -1,7 +1,7 @@
 import { BadRequestError } from "../errors/BadRequestError";
-import { EndpointDto } from "../interfaces/endpoint.interface";
+import { CreateEndpointDto, UpdateEndpointDto } from "../interfaces/endpoint.interface";
 import { validateAllowedKeys } from "./allowedKeys.validator";
-import { endpointDtoAllowedKeys } from "./allowedKeys/endpoint.allowedkeys";
+import { endpointDtoAllowedKeys, endpointUpdateDtoAllowedKeys } from "./allowedKeys/endpoint.allowedkeys";
 
 // Validations must be in order from attributes appear in the interface
 
@@ -149,7 +149,27 @@ const requestBodyValidations = (requestBody: string) => {
     }
 }
 
-export const validateEndpointDto = (endpointDto: EndpointDto) => {
+export const validateEndpointUpdateDto = (updateEndpointDto: UpdateEndpointDto) => {
+    if (!updateEndpointDto) {
+        throw new BadRequestError("Endpoint update request body is required.");
+    }
+
+    validateAllowedKeys(updateEndpointDto, endpointUpdateDtoAllowedKeys);
+
+    const { name, path, method, description, notes, tags, requestBody } = updateEndpointDto;
+
+    nameValidations(name);
+    pathValidations(path);
+    methodValidations(method);
+    descriptionValidations(description);
+    notesValidations(notes);
+    tagsValidations(tags);
+    requestBodyValidations(requestBody);
+
+    return updateEndpointDto;
+}
+
+export const validateEndpointDto = (endpointDto: CreateEndpointDto) => {
     if (!endpointDto) {
         throw new BadRequestError("Endpoint request body is required.");
     }

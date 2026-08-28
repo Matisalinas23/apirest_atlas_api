@@ -1,1 +1,2 @@
 export const endpointDtoAllowedKeys = ["name", "moduleId", "path", "method", "description", "notes", "requestBody", "tags"];
+export const endpointUpdateDtoAllowedKeys = ["name", "path", "method", "description", "notes", "requestBody", "tags"];
