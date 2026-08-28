@@ -1,12 +1,12 @@
 import { handlePrismaError } from "../helpers/prisma.helper";
-import { EndpointCompleteResponse, EndpointDto, EndpointResponse } from "../interfaces/endpoint.interface";
-import { createEndpointRepository, getEndpointByIdRepository, getEndpointsRepository } from "../repositories/endpoints.repository";
-import { validateEndpointDto } from "../validators/endpoint.validator";
+import { EndpointCompleteResponse, CreateEndpointDto, EndpointResponse, UpdateEndpointDto } from "../interfaces/endpoint.interface";
+import { createEndpointRepository, getEndpointByIdRepository, getEndpointsRepository, updateEndpointRepository } from "../repositories/endpoints.repository";
+import { validateEndpointDto, validateEndpointUpdateDto } from "../validators/endpoint.validator";
 import { validateId } from "../validators/ids.validator";
 
-export const createEndpointService = async (endpointDto: EndpointDto): Promise<EndpointResponse> => {
+export const createEndpointService = async (endpointDto: CreateEndpointDto): Promise<EndpointResponse> => {
     try {
-        const validEndpointDto: EndpointDto = validateEndpointDto(endpointDto);
+        const validEndpointDto: CreateEndpointDto = validateEndpointDto(endpointDto);
         const endpoint: EndpointResponse = await createEndpointRepository(validEndpointDto);
 
         return endpoint;
@@ -31,6 +31,20 @@ export const getEndpointByIdService = async (id: number): Promise<EndpointComple
     try {
         validateId(id);
         const endpoint: EndpointCompleteResponse = await getEndpointByIdRepository(id);
+
+        return endpoint;
+    } catch (error) {
+        handlePrismaError(error, 'Endpoint');
+        throw error;
+    }
+}
+
+export const updateEndpointService = async (id: number, endpointDto: UpdateEndpointDto): Promise<EndpointResponse> => {
+    try {
+        const validId: number = validateId(id);
+        const validEndpointDto: UpdateEndpointDto = validateEndpointUpdateDto(endpointDto);
+
+        const endpoint: EndpointResponse = await updateEndpointRepository(validId, validEndpointDto);
 
         return endpoint;
     } catch (error) {

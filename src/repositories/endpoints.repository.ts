@@ -1,7 +1,7 @@
-import { EndpointCompleteResponse, EndpointDto, EndpointResponse } from "../interfaces/endpoint.interface"
+import { EndpointCompleteResponse, CreateEndpointDto, EndpointResponse, UpdateEndpointDto } from "../interfaces/endpoint.interface"
 import { prisma } from "../lib/prisma"
 
-export const createEndpointRepository = async (endpointDto: EndpointDto): Promise<EndpointResponse> => {
+export const createEndpointRepository = async (endpointDto: CreateEndpointDto): Promise<EndpointResponse> => {
     const endpoint: EndpointResponse = await prisma.endpoint.create({
         data: {
             name: endpointDto.name,
@@ -36,6 +36,23 @@ export const getEndpointByIdRepository = async (id: number): Promise<EndpointCom
             queryParameters: true,
             headers: true,
             response: true,
+        }
+    })
+
+    return endpoint
+}
+
+export const updateEndpointRepository = async (id: number, endpointDto: UpdateEndpointDto): Promise<EndpointResponse> => {
+    const endpoint: EndpointResponse = await prisma.endpoint.update({
+        where: { id },
+        data: {
+            name: endpointDto.name,
+            path: endpointDto.path,
+            method: endpointDto.method,
+            description: endpointDto.description,
+            notes: endpointDto.notes,
+            requestBody: endpointDto.requestBody,
+            tags: endpointDto.tags
         }
     })
 

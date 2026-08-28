@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { EndpointCompleteResponse, EndpointDto, EndpointResponse } from "../interfaces/endpoint.interface";
-import { createEndpointService, getEndpointByIdService, getEndpointsService } from "../services/endpoints.service";
+import { EndpointCompleteResponse, CreateEndpointDto, EndpointResponse, UpdateEndpointDto } from "../interfaces/endpoint.interface";
+import { createEndpointService, getEndpointByIdService, getEndpointsService, updateEndpointService } from "../services/endpoints.service";
 
 export const createEndpointController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const endpointDto: EndpointDto = req.body;
+        const endpointDto: CreateEndpointDto = req.body;
         const endpoint: EndpointResponse = await createEndpointService(endpointDto);
 
         res.status(201).json({ endpoint })
@@ -29,6 +29,18 @@ export const getEndpointByIdController = async (req: Request, res: Response, nex
         const endpoint: EndpointCompleteResponse = await getEndpointByIdService(endpointId);
 
         res.status(200).json({ endpoint });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const updateEndpointController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const endpointId: number = Number(req.params.id);
+        const endpointDto: UpdateEndpointDto = req.body;
+        const updatedEndpoint: EndpointResponse = await updateEndpointService(endpointId, endpointDto);
+
+        res.status(200).json({ updatedEndpoint });
     } catch (error) {
         next(error);
     }
