@@ -58,3 +58,9 @@ export const updateEndpointRepository = async (id: number, endpointDto: UpdateEn
 
     return endpoint
 }
+
+export const deleteEndpointRepository = async (id: number): Promise<void> => {
+    await prisma.endpoint.delete({
+        where: { id }
+    })
+}

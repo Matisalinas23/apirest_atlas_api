@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { EndpointCompleteResponse, CreateEndpointDto, EndpointResponse, UpdateEndpointDto } from "../interfaces/endpoint.interface";
-import { createEndpointService, getEndpointByIdService, getEndpointsService, updateEndpointService } from "../services/endpoints.service";
+import { createEndpointService, deleteEndpointService, getEndpointByIdService, getEndpointsService, updateEndpointService } from "../services/endpoints.service";
 
 export const createEndpointController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -41,6 +41,17 @@ export const updateEndpointController = async (req: Request, res: Response, next
         const updatedEndpoint: EndpointResponse = await updateEndpointService(endpointId, endpointDto);
 
         res.status(200).json({ updatedEndpoint });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const deleteEndpointController = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const endpointId: number = Number(req.params.id);
+        await deleteEndpointService(endpointId);
+
+        res.status(200).json({ message: "Endpoint deleted successfully" });
     } catch (error) {
         next(error);
     }

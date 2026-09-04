@@ -1,6 +1,6 @@
 import { handlePrismaError } from "../helpers/prisma.helper";
 import { EndpointCompleteResponse, CreateEndpointDto, EndpointResponse, UpdateEndpointDto } from "../interfaces/endpoint.interface";
-import { createEndpointRepository, getEndpointByIdRepository, getEndpointsRepository, updateEndpointRepository } from "../repositories/endpoints.repository";
+import { createEndpointRepository, deleteEndpointRepository, getEndpointByIdRepository, getEndpointsRepository, updateEndpointRepository } from "../repositories/endpoints.repository";
 import { validateEndpointDto, validateEndpointUpdateDto } from "../validators/endpoint.validator";
 import { validateId } from "../validators/ids.validator";
 
@@ -47,6 +47,17 @@ export const updateEndpointService = async (id: number, endpointDto: UpdateEndpo
         const endpoint: EndpointResponse = await updateEndpointRepository(validId, validEndpointDto);
 
         return endpoint;
+    } catch (error) {
+        handlePrismaError(error, 'Endpoint');
+        throw error;
+    }
+}
+
+export const deleteEndpointService = async (id: number): Promise<void> => {
+    try {
+        const validId: number = validateId(id);
+
+        await deleteEndpointRepository(validId);
     } catch (error) {
         handlePrismaError(error, 'Endpoint');
         throw error;
